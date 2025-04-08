@@ -1,9 +1,310 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<!-- Keep your existing head content and styles -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Comprehensive Mental Health & Capability Dashboard</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="dexcom-integration.js"></script>
 <style>
-  /* Add these new styles to your existing CSS */
+  body {
+    font-family: 'Arial', sans-serif;
+    color: white;
+    background-color: #2c2c2c;
+    padding: 32px;
+    max-width: 2048px;
+    margin: 0 auto;
+    font-size: 19px;
+  }
+  h1, h2, h3 {
+    color: #4a9eff;
+  }
+  h1 {
+    font-size: 2.5em;
+    margin-bottom: 24px;
+    text-align: center;
+  }
+  h2 {
+    font-size: 1.8em;
+    margin-bottom: 16px;
+    border-bottom: 1px solid #4a9eff;
+    padding-bottom: 8px;
+  }
+  h3 {
+    font-size: 1.4em;
+    margin: 20px 0 10px 0;
+  }
+  .header {
+    text-align: center;
+    margin-bottom: 40px;
+  }
+  .date {
+    color: #4a9eff;
+    font-size: 1.3em;
+  }
+  .dashboard-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+  .full-width {
+    grid-column: 1 / -1;
+  }
+  .panel {
+    background-color: #333;
+    border-radius: 10px;
+    padding: 20px;
+    margin-bottom: 30px;
+  }
+  .rating-container {
+    display: flex;
+    align-items: center;
+    margin: 15px 0;
+    gap: 20px;
+  }
+  .rating-label {
+    width: 240px;
+    font-weight: bold;
+  }
+  .rating-dots {
+    display: flex;
+    gap: 12px;
+  }
+  .dot {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+  .dot-1 { background-color: #ff4444; }
+  .dot-2 { background-color: #ff8c42; }
+  .dot-3 { background-color: #ffd242; }
+  .dot-4 { background-color: #4CAF50; }
+  .dot-5 { background-color: #2196F3; }
+  .dot-empty {
+    background-color: #444;
+    border: 2px solid #666;
+  }
+  .support-needs {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    margin-top: 20px;
+  }
+  .need-item {
+    background-color: #444;
+    padding: 15px;
+    border-radius: 8px;
+  }
+  .checked {
+    background-color: #4CAF50;
+  }
+  .capacity-summary {
+    background-color: #344;
+    padding: 25px;
+    border-radius: 10px;
+    margin-top: 20px;
+  }
+  .capacity-bar {
+    height: 30px;
+    background: linear-gradient(to right, #ff4444, #ff8c42, #ffd242, #4CAF50, #2196F3);
+    border-radius: 15px;
+    position: relative;
+    margin-top: 20px;
+  }
+  .capacity-marker {
+    position: absolute;
+    width: 6px;
+    height: 45px;
+    background-color: white;
+    top: -8px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 15px 0;
+    color: white;
+  }
+  table, th, td {
+    border: 1px solid #555;
+  }
+  th, td {
+    padding: 12px;
+    text-align: left;
+  }
+  th {
+    background-color: #444;
+    color: #4a9eff;
+  }
+  ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  ul li {
+    margin: 10px 0;
+    padding: 8px;
+    background-color: #3a3a3a;
+    border-radius: 5px;
+  }
+  .highlight {
+    color: #ff8c42;
+    font-weight: bold;
+  }
+  .checkbox-list li {
+    display: flex;
+    align-items: center;
+  }
+  .checkbox {
+    width: 20px;
+    height: 20px;
+    background-color: #444;
+    border: 2px solid #666;
+    border-radius: 4px;
+    margin-right: 10px;
+    display: inline-block;
+  }
+  .checkbox.checked {
+    background-color: #4CAF50;
+    position: relative;
+  }
+  .checkbox.checked::after {
+    content: "✓";
+    position: absolute;
+    color: white;
+    font-weight: bold;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  .energy-level {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 10px 0;
+  }
+  .energy-indicator {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+  }
+  .energy-low { background-color: #ff4444; }
+  .energy-moderate { background-color: #ffd242; }
+  .energy-high { background-color: #4CAF50; }
+  .progress-container {
+    background-color: #444;
+    border-radius: 10px;
+    height: 20px;
+    margin: 10px 0;
+    overflow: hidden;
+  }
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(to right, #ff4444, #ff8c42, #ffd242, #4CAF50);
+  }
+  .tag {
+    display: inline-block;
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 15px;
+    font-size: 0.9em;
+  }
+  .tag-red { background-color: #ff4444; }
+  .tag-orange { background-color: #ff8c42; }
+  .tag-yellow { background-color: #ffd242; color: #333; }
+  .tag-green { background-color: #4CAF50; }
+  .tag-blue { background-color: #2196F3; }
+  .grid-3 {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 15px;
+  }
+  .mini-card {
+    background-color: #3a3a3a;
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  .mini-card h4 {
+    margin: 0 0 10px 0;
+    color: #ddd;
+  }
+  .mini-card .value {
+    font-size: 1.8em;
+    font-weight: bold;
+  }
+  .trend {
+    font-size: 0.8em;
+    margin-top: 5px;
+  }
+  .trend-up { color: #4CAF50; }
+  .trend-down { color: #ff4444; }
+  .trend-stable { color: #ffd242; }
+  .sensory-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 10px;
+    margin: 15px 0;
+  }
+  .sensory-item {
+    text-align: center;
+    padding: 10px;
+    background-color: #3a3a3a;
+    border-radius: 8px;
+  }
+  .sensory-value {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin: 5px 0;
+  }
+  .icon {
+    font-size: 1.5em;
+    margin-bottom: 5px;
+  }
+  .bg-graph {
+    height: 200px;
+    margin: 20px 0;
+    background: #333;
+    border-radius: 10px;
+    padding: 10px;
+  }
+  .bg-stats {
+    width: 100%;
+    margin-top: 20px;
+  }
+  .trend-arrow {
+    font-size: 1.2em;
+    margin-left: 5px;
+  }
+  .bg-high { color: #ff4444; }
+  .bg-normal { color: #4CAF50; }
+  .bg-low { color: #ff8c42; }
+  #dexcomLogin {
+    background: #3a3a3a;
+    padding: 20px;
+    border-radius: 10px;
+    margin: 20px 0;
+  }
+  #dexcomLogin input {
+    width: 100%;
+    padding: 8px;
+    margin: 5px 0 15px;
+    background: #444;
+    border: 1px solid #555;
+    border-radius: 5px;
+    color: white;
+  }
+  #dexcomLogin button {
+    background: #4a9eff;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  #dexcomLogin button:hover {
+    background: #357abd;
+  }
   .nav-bar {
     background-color: #333;
     padding: 15px;
@@ -13,7 +314,6 @@
     justify-content: space-between;
     align-items: center;
   }
-  
   .nav-button {
     background-color: #4a9eff;
     color: white;
@@ -23,11 +323,9 @@
     cursor: pointer;
     font-size: 1em;
   }
-  
   .nav-button:hover {
     background-color: #357abd;
   }
-  
   .date-picker {
     background-color: #333;
     color: white;
@@ -35,8 +333,6 @@
     padding: 8px;
     border-radius: 5px;
   }
-  
-  /* Add your existing styles here */
 </style>
 </head>
 <body>
@@ -46,117 +342,166 @@
   <button class="nav-button" onclick="exportData()">Export Data</button>
 </div>
 
-<!-- Keep your existing header and dashboard content, but add data attributes -->
 <div class="header">
   <h1>Jrs Dort Comprehensive Health Dashboard</h1>
   <div class="date" id="currentDate">April 8, 2025</div>
 </div>
 
-<!-- Modified rating containers with data attributes -->
-<div class="rating-container">
-  <span class="rating-label">Sleep Quality:</span>
-  <div class="rating-dots" data-metric="sleepQuality">
-    <span class="dot dot-empty" data-value="1"></span>
-    <span class="dot dot-empty" data-value="2"></span>
-    <span class="dot dot-empty" data-value="3"></span>
-    <span class="dot dot-empty" data-value="4"></span>
-    <span class="dot dot-empty" data-value="5"></span>
+<div class="dashboard-grid">
+  <!-- Morning Capability Assessment -->
+  <div class="panel">
+    <h2>🌅 Morning Capability Assessment</h2>
+    
+    <h3>Physical Resources</h3>
+    <div class="rating-container">
+      <span class="rating-label">Sleep Quality:</span>
+      <div class="rating-dots" data-metric="sleepQuality">
+        <span class="dot dot-1"></span>
+        <span class="dot dot-2"></span>
+        <span class="dot dot-empty"></span>
+        <span class="dot dot-empty"></span>
+        <span class="dot dot-empty"></span>
+      </div>
+    </div>
+    <!-- Add other physical metrics -->
+    
+    <h3>Mental Resources</h3>
+    <div class="rating-container">
+      <span class="rating-label">Emotional Regulation:</span>
+      <div class="rating-dots" data-metric="emotionalRegulation">
+        <span class="dot dot-1"></span>
+        <span class="dot dot-2"></span>
+        <span class="dot dot-empty"></span>
+        <span class="dot dot-empty"></span>
+        <span class="dot dot-empty"></span>
+      </div>
+    </div>
+    <!-- Add other mental metrics -->
+  </div>
+
+  <!-- Sensory Profile & Medication -->
+  <div class="panel">
+    <h2>🔍 Sensory Profile & Medication</h2>
+    
+    <h3>Sensory Processing</h3>
+    <div class="sensory-grid">
+      <!-- Add sensory items -->
+    </div>
+    
+    <h3>📊 Dexcom CGM Data</h3>
+    <!-- Login Form (shows only when not logged in) -->
+    <div id="dexcomLogin" style="display: none;">
+        <h3>Connect Dexcom Share</h3>
+        <form id="dexcomLoginForm">
+            <div class="form-group">
+                <label>Dexcom Username:</label>
+                <input type="text" id="dexcomUsername" required>
+            </div>
+            <div class="form-group">
+                <label>Dexcom Password:</label>
+                <input type="password" id="dexcomPassword" required>
+            </div>
+            <button type="submit">Connect Dexcom</button>
+        </form>
+    </div>
+
+    <!-- CGM Data Display -->
+    <div id="dexcomData" style="display: none;">
+        <div class="grid-3">
+            <div class="mini-card">
+                <h4>Current BG</h4>
+                <div class="value" id="currentBG">--</div>
+                <div class="trend" id="bgTrend">--</div>
+            </div>
+            <div class="mini-card">
+                <h4>Last 24h Average</h4>
+                <div class="value" id="avgBG">--</div>
+                <div class="trend" id="avgTrend">--</div>
+            </div>
+            <div class="mini-card">
+                <h4>Time in Range</h4>
+                <div class="value" id="timeInRange">--%</div>
+                <div class="trend" id="rangeTrend">--</div>
+            </div>
+        </div>
+
+        <!-- BG Graph -->
+        <div class="bg-graph">
+            <canvas id="bgChart"></canvas>
+        </div>
+
+        <!-- Stats Table -->
+        <table class="bg-stats">
+            <tr>
+                <th>Metric</th>
+                <th>Last 24h</th>
+                <th>Target</th>
+            </tr>
+            <tr>
+                <td>Low Events</td>
+                <td id="lowEvents">--</td>
+                <td>< 4%</td>
+            </tr>
+            <tr>
+                <td>High Events</td>
+                <td id="highEvents">--</td>
+                <td>< 25%</td>
+            </tr>
+            <tr>
+                <td>Average</td>
+                <td id="average">--</td>
+                <td>4.0-10.0</td>
+            </tr>
+        </table>
+    </div>
+  </div>
+
+  <!-- Support Needs & Emotional Regulation -->
+  <div class="panel">
+    <h2>🛠️ Support Needs & Emotional Regulation</h2>
+    <!-- Add support needs content -->
+  </div>
+
+  <!-- Daily Planning & Tracking -->
+  <div class="panel">
+    <h2>📋 Daily Planning & Tracking</h2>
+    <!-- Add daily planning content -->
+  </div>
+
+  <!-- Overall Capacity Summary -->
+  <div class="panel full-width">
+    <h2>📊 Overall Capacity & Recommendations</h2>
+    <!-- Add capacity summary content -->
   </div>
 </div>
 
-<!-- Add data attributes to all your other rating containers similarly -->
-
 <script>
-  // Initialize dashboard
-  document.addEventListener('DOMContentLoaded', function() {
-    // Set date picker to today
-    const today = new Date().toISOString().split('T')[0];
-    document.getElementById('datePicker').value = today;
-    
-    // Load most recent data
-    loadMostRecentData();
-  });
+  // Add the Dexcom initialization script here
+  let dexcom;
+  let bgChart;
 
-  function loadMostRecentData() {
-    const data = JSON.parse(localStorage.getItem('healthData') || '[]');
-    if (data.length > 0) {
-      const latest = data[data.length - 1];
-      updateDashboard(latest);
-    }
-  }
-
-  function loadDataForDate(date) {
-    const data = JSON.parse(localStorage.getItem('healthData') || '[]');
-    const dayData = data.find(entry => entry.date === date);
-    if (dayData) {
-      updateDashboard(dayData);
-    } else {
-      alert('No data available for selected date');
-    }
-  }
-
-  function updateDashboard(data) {
-    // Update date display
-    document.getElementById('currentDate').textContent = new Date(data.date).toLocaleDateString();
-
-    // Update all metrics
-    Object.entries(data.metrics || {}).forEach(([metric, value]) => {
-      const container = document.querySelector(`[data-metric="${metric}"]`);
-      if (container) {
-        updateDots(container, value);
-      }
-    });
-
-    // Update support needs
-    Object.entries(data.supportNeeds || {}).forEach(([need, isNeeded]) => {
-      const element = document.querySelector(`[data-need="${need}"]`);
-      if (element) {
-        element.classList.toggle('checked', isNeeded);
-      }
-    });
-
-    // Update other sections as needed
-    updateCapacitySummary(data.capacity || {});
-    updateEnergyLevels(data.energy || {});
-    updateBloodGlucose(data.bloodGlucose || {});
-  }
-
-  function updateDots(container, value) {
-    const dots = container.querySelectorAll('.dot');
-    dots.forEach((dot, index) => {
-      if (index < value) {
-        dot.className = `dot dot-${index + 1}`;
+  async function initializeDexcom() {
+      dexcom = new DexcomAPI();
+      const token = localStorage.getItem('dexcomToken');
+      
+      if (!token) {
+          document.getElementById('dexcomLogin').style.display = 'block';
+          document.getElementById('dexcomData').style.display = 'none';
       } else {
-        dot.className = 'dot dot-empty';
+          document.getElementById('dexcomLogin').style.display = 'none';
+          document.getElementById('dexcomData').style.display = 'block';
+          await updateDexcomData();
       }
-    });
   }
 
-  function exportData() {
-    const data = localStorage.getItem('healthData');
-    const blob = new Blob([data], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'health-dashboard-data.json';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
-  }
+  // Add all the other Dexcom functions here
+  // (updateDexcomData, updateCurrentBG, updateBGStats, updateBGChart, etc.)
+  
+  // Initialize Dexcom integration
+  document.addEventListener('DOMContentLoaded', initializeDexcom);
 
-  // Add other helper functions for updating specific sections
-  function updateCapacitySummary(capacity) {
-    // Update capacity markers and values
-  }
-
-  function updateEnergyLevels(energy) {
-    // Update energy indicators and percentages
-  }
-
-  function updateBloodGlucose(bg) {
-    // Update blood glucose values and trends
-  }
+  // Update every 5 minutes
+  setInterval(updateDexcomData, 300000);
 </script>
 </body>
 </html>
