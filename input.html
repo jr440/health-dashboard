@@ -1,168 +1,259 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Health Dashboard Input</title>
-<style>
-  /* Copy the relevant styles from your dashboard CSS */
-  body {
-    font-family: 'Arial', sans-serif;
-    color: white;
-    background-color: #2c2c2c;
-    padding: 32px;
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .panel {
-    background-color: #333;
-    border-radius: 10px;
-    padding: 20px;
-    margin-bottom: 20px;
-  }
-  
-  h1, h2, h3 {
-    color: #4a9eff;
-  }
-  
-  .form-group {
-    margin-bottom: 15px;
-  }
-  
-  label {
-    display: block;
-    margin-bottom: 5px;
-  }
-  
-  input[type="range"] {
-    width: 100%;
-    margin: 10px 0;
-  }
-  
-  .value-display {
-    color: white;
-    margin-left: 10px;
-  }
-  
-  button {
-    background-color: #4a9eff;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 1em;
-  }
-  
-  button:hover {
-    background-color: #357abd;
-  }
-  
-  .checkbox-group {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 10px;
-    margin: 10px 0;
-  }
-  
-  .checkbox-label {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Health Dashboard Input</title>
+  <style>
+      body {
+          font-family: 'Arial', sans-serif;
+          color: white;
+          background-color: #2c2c2c;
+          padding: 32px;
+          max-width: 800px;
+          margin: 0 auto;
+      }
+      
+      .panel {
+          background-color: #333;
+          border-radius: 10px;
+          padding: 20px;
+          margin-bottom: 20px;
+      }
+      
+      h1, h2, h3 {
+          color: #4a9eff;
+      }
+      
+      .form-group {
+          margin-bottom: 15px;
+      }
+      
+      label {
+          display: block;
+          margin-bottom: 5px;
+      }
+      
+      input[type="range"] {
+          width: 100%;
+          margin: 10px 0;
+      }
+      
+      .value-display {
+          color: white;
+          margin-left: 10px;
+      }
+      
+      button {
+          background-color: #4a9eff;
+          color: white;
+          border: none;
+          padding: 10px 20px;
+          border-radius: 5px;
+          cursor: pointer;
+          font-size: 1em;
+          margin-right: 10px;
+      }
+      
+      button:hover {
+          background-color: #357abd;
+      }
+      
+      .checkbox-group {
+          display: grid;
+          grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+          gap: 10px;
+          margin: 10px 0;
+      }
+      
+      .checkbox-label {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+      }
+      
+      input[type="checkbox"] {
+          width: 20px;
+          height: 20px;
+      }
+      
+      input[type="number"],
+      input[type="text"],
+      textarea {
+          width: 100%;
+          padding: 8px;
+          margin: 5px 0;
+          background: #444;
+          border: 1px solid #555;
+          border-radius: 5px;
+          color: white;
+      }
+      
+      .button-group {
+          display: flex;
+          gap: 10px;
+          margin-top: 20px;
+      }
+      
+      .cancel-button {
+          background-color: #666;
+      }
+      
+      .rating-container {
+          display: flex;
+          align-items: center;
+          margin: 15px 0;
+      }
+      
+      .rating-dots {
+          display: flex;
+          gap: 8px;
+      }
+      
+      .dot {
+          width: 24px;
+          height: 24px;
+          border-radius: 50%;
+          border: 2px solid #666;
+          cursor: pointer;
+      }
+      
+      .dot.active {
+          background-color: #4a9eff;
+          border-color: #4a9eff;
+      }
+  </style>
 </head>
 <body>
-<div class="panel">
-  <h1>Health Dashboard Input</h1>
-  <form id="healthForm">
-    <div class="panel">
-      <h2>Physical Resources</h2>
-      <div class="form-group">
-        <label>Sleep Quality</label>
-        <input type="range" min="1" max="5" step="1" name="sleepQuality">
-        <span class="value-display">3</span>
-      </div>
-      <!-- Add other physical metrics -->
-    </div>
+  <div class="panel">
+      <h1>Health Dashboard Input</h1>
+      <form id="healthForm">
+          <div class="panel">
+              <h2>Physical Resources</h2>
+              <div class="form-group">
+                  <label>Sleep Quality</label>
+                  <input type="range" min="1" max="5" step="1" name="sleepQuality" value="3">
+                  <span class="value-display">3</span>
+              </div>
+              
+              <div class="form-group">
+                  <label>Energy Level</label>
+                  <input type="range" min="1" max="5" step="1" name="energyLevel" value="3">
+                  <span class="value-display">3</span>
+              </div>
+              
+              <div class="form-group">
+                  <label>Physical Pain</label>
+                  <input type="range" min="1" max="5" step="1" name="painLevel" value="1">
+                  <span class="value-display">1</span>
+              </div>
+          </div>
 
-    <div class="panel">
-      <h2>Mental Resources</h2>
-      <div class="form-group">
-        <label>Emotional Regulation</label>
-        <input type="range" min="1" max="5" step="1" name="emotionalRegulation">
-        <span class="value-display">3</span>
-      </div>
-      <!-- Add other mental metrics -->
-    </div>
+          <div class="panel">
+              <h2>Mental Resources</h2>
+              <div class="form-group">
+                  <label>Emotional Regulation</label>
+                  <input type="range" min="1" max="5" step="1" name="emotionalRegulation" value="3">
+                  <span class="value-display">3</span>
+              </div>
+              
+              <div class="form-group">
+                  <label>Focus/Attention</label>
+                  <input type="range" min="1" max="5" step="1" name="focus" value="3">
+                  <span class="value-display">3</span>
+              </div>
+              
+              <div class="form-group">
+                  <label>Anxiety Level</label>
+                  <input type="range" min="1" max="5" step="1" name="anxiety" value="3">
+                  <span class="value-display">3</span>
+              </div>
+          </div>
 
-    <div class="panel">
-      <h2>Support Needs</h2>
-      <div class="checkbox-group">
-        <label class="checkbox-label">
-          <input type="checkbox" name="supportNeeds" value="verbalPrompts">
-          Verbal Prompts
-        </label>
-        <!-- Add other support needs -->
-      </div>
-    </div>
+          <div class="panel">
+              <h2>Support Needs</h2>
+              <div class="checkbox-group">
+                  <label class="checkbox-label">
+                      <input type="checkbox" name="supportNeeds" value="verbalPrompts">
+                      Verbal Prompts
+                  </label>
+                  <label class="checkbox-label">
+                      <input type="checkbox" name="supportNeeds" value="writtenInstructions">
+                      Written Instructions
+                  </label>
+                  <label class="checkbox-label">
+                      <input type="checkbox" name="supportNeeds" value="sensoryReduction">
+                      Sensory Reduction
+                  </label>
+                  <label class="checkbox-label">
+                      <input type="checkbox" name="supportNeeds" value="processingTime">
+                      Extended Processing Time
+                  </label>
+                  <label class="checkbox-label">
+                      <input type="checkbox" name="supportNeeds" value="emotionalSupport">
+                      Emotional Support
+                  </label>
+              </div>
+          </div>
 
-    <div class="panel">
-      <h2>Blood Glucose</h2>
-      <div class="form-group">
-        <label>Current BG (mmol/L)</label>
-        <input type="number" step="0.1" name="currentBG">
-      </div>
-    </div>
+          <div class="panel">
+              <h2>Notes</h2>
+              <div class="form-group">
+                  <label>Daily Notes</label>
+                  <textarea name="notes" rows="4"></textarea>
+              </div>
+          </div>
 
-    <button type="submit">Save Entry</button>
-  </form>
-</div>
+          <div class="button-group">
+              <button type="submit">Save Entry</button>
+              <button type="button" class="cancel-button" onclick="window.location.href='index.html'">Cancel</button>
+          </div>
+      </form>
+  </div>
 
-<script>
-  // Initialize form
-  document.addEventListener('DOMContentLoaded', function() {
-    // Set up range input displays
-    document.querySelectorAll('input[type="range"]').forEach(input => {
-      const display = input.nextElementSibling;
-      input.addEventListener('input', () => {
-        display.textContent = input.value;
+  <script>
+      // Initialize form
+      document.addEventListener('DOMContentLoaded', function() {
+          // Set up range input displays
+          document.querySelectorAll('input[type="range"]').forEach(input => {
+              const display = input.nextElementSibling;
+              input.addEventListener('input', () => {
+                  display.textContent = input.value;
+              });
+          });
+
+          // Form submission
+          document.getElementById('healthForm').addEventListener('submit', function(e) {
+              e.preventDefault();
+              
+              const formData = new FormData(this);
+              const data = {
+                  date: new Date().toISOString().split('T')[0],
+                  metrics: {},
+                  supportNeeds: {},
+                  notes: formData.get('notes')
+              };
+
+              // Process form data
+              formData.forEach((value, key) => {
+                  if (key === 'supportNeeds') {
+                      data.supportNeeds[value] = true;
+                  } else if (key === 'notes') {
+                      // Already handled above
+                  } else {
+                      data.metrics[key] = parseInt(value);
+                  }
+              });
+
+              // Save to localStorage
+              const savedData = JSON.parse(localStorage.getItem('healthData') || '[]');
+              savedData.push(data);
+              localStorage.setItem('healthData', JSON.stringify(savedData));
+
+              // Redirect to dashboard
+              window.location.href = 'index.html';
+          });
       });
-    });
-
-    // Form submission
-    document.getElementById('healthForm').addEventListener('submit', function(e) {
-      e.preventDefault();
-      
-      const formData = new FormData(this);
-      const data = {
-        date: new Date().toISOString().split('T')[0],
-        metrics: {},
-        supportNeeds: {},
-        bloodGlucose: {}
-      };
-
-      // Process form data
-      formData.forEach((value, key) => {
-        if (key.startsWith('supportNeeds')) {
-          data.supportNeeds[value] = true;
-        } else if (key === 'currentBG') {
-          data.bloodGlucose.current = parseFloat(value);
-        } else {
-          data.metrics[key] = parseInt(value);
-        }
-      });
-
-      // Save to localStorage
-      const savedData = JSON.parse(localStorage.getItem('healthData') || '[]');
-      savedData.push(data);
-      localStorage.setItem('healthData', JSON.stringify(savedData));
-
-      // Redirect to dashboard
-      window.location.href = 'index.html';
-    });
-  });
-</script>
+  </script>
 </body>
 </html>
